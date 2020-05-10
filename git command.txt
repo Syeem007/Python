@@ -1,0 +1,16 @@
+ Id CommandLine
+  -- -----------
+   1 Set-Location -literalPath 'E:\se'
+   2 git clone https://github.com/UniversityOfAppliedSciencesFrankfurt/se-cloud-2019-2020.git
+   3 git checkout syeem
+   4 git status
+   5 cd .\se-cloud-2019-2020\
+   6 git status
+   7 git checkout syeem
+   8 git status
+   9 git add .
+  10 git commit -m "project 7,9,8,11"
+  11 git push
+
+
+https://www.youtube.com/watch?v=wBp0Rb-ZJak

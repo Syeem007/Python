@@ -1,0 +1,18 @@
+
+for vs code
+cd to dockerfile
+docker build -t name .
+[name] = image name
+
+For Python
+
+FROM python:3.7
+COPY my_script.py /my_script.py
+ENTRYPOINT ["python","/my_script.py"]
+
+for build 
+
+docker build -t pyconau/hello1 ./
+
+for run image
+docker run pyconau/hello

@@ -1,0 +1,229 @@
+1
+django-admin startproject mysite
+
+edit url and import include
+
+then add 1st apps path 
+
+urlpatterns = [
+    path('', include("main.urls")),
+    path('admin/', admin.site.urls),
+]
+
+
+2.python manage.py startapp main
+Create first app  
+the add new.py file name url then add path for views
+
+urlpatterns = [
+    path("", views.index, name="index"),
+    #   path("music/",views.detail,name="detail"),
+    path('music/<int:album_id>/', views.detail, name="detail"),
+
+]
+
+import views
+
+
+
+
+3.In views page declear the function and import  djanjo.http import HTTPresponse.
+and return html file
+
+4.next part is creating database 
+define a class
+
+from django.db import models
+
+# Create your models here.
+class Album(models.model):
+    artist=models.CharField(max_length=250)
+    album_title=models.CharField(max_length=250)
+    genre=models.CharField(max_length=250)
+    album_logo=models.CharField(max_length=100)
+    
+    
+class Song(models.model):    
+    album=models.ForeignKey(Album,on_delete=models.CASCADE())
+
+    def __str__(self):
+        return self.tutoril_title
+
+then in settings "'main.apps.MainConfig'" the app name is added
+
+
+then migrate database. "python manage.py makemigrations"
+
+then
+"python manage.py migrate"
+
+
+for data input in db
+
+python manage.py shell
+
+4...create superuser....for admin
+
+python manage.py createsuperuser
+
+5. Register your models here. in admin... for db
+
+from .models import Tutorial
+
+admin.site.register(Tutorial)
+
+rearrange database..
+
+class TutorialAdmin(admin.ModelAdmin):
+   # fields = ["tutoril_title",
+    #          "tutoril_published",
+    #         "tutoril_content"
+     #         ]
+    fieldsets=[
+        ("Title/date",{"fields":["tutoril_title",
+              "tutoril_published"]}),("content",{"fields":["tutoril_content"]})
+    ]
+
+
+
+
+6.Giving default file in any db
+tutoril_published=models.DateTimeField("date published",default=datetime.now()) 
+
+
+7.pip install django-tinymce4-lite 
+Using for adding editor in db
+add in settings  app= "tinymce" and paste the code (tinymce)
+
+8.
+and add path in url
+
+path("tinymce/",include("tinymce.urls")),
+
+9.then in import in admin
+
+from tinymce.widgets import TinyMCE
+from django.db import models
+
+
+add in a class.....
+
+ formfield_overrides = {
+        models.TextField: {"widget": TinyMCE()}
+    }
+
+9.front page edit view
+
+
+from .models import Tutorial
+from django.shortcuts import render
+
+
+# Create your views here.
+
+def homepage(request):
+    return render(request=request,
+                  template_name="main/home.html",
+                  context={'tutorials': Tutorial.objects.all})
+
+
+
+10.
+
+for url view
+
+edit in url.......
+
+from django.urls import path,include
+from . import views
+from django.conf.urls import url
+urlpatterns = [
+    path("",views.index,name="index"),
+    url(r"^(?P<album_id>[0-9]+)$",views.detail,name="detail")
+]
+
+
+......in views
+
+def detail(request, album_id):
+    return HttpResponse("<h2>Details for Album id:" + str(album_id) + "<h2>")
+
+
+11. connecting db in Admin
+
+from django.contrib import admin
+from .models import Album,Song
+# Register your models here.
+admin.site.register(Album)
+admin.site.register(Song)
+
+12.in url
+
+urlpatterns = [
+    path("",views.index,name="index"),
+    path("music/",views.detail,name="detail"),
+#    url(r"^(?P<album_id>[0-9]+)$",views.detail,name="detail"),
+]
+
+
+
+13.creating temp
+
+from  django.template import loader
+
+14.for views
+def index(request):
+    all_albums=Album.objects.all()
+    template=loader.get_template("music/index.html")
+    context={
+        'all_albums': all_albums,
+    }
+    return HttpResponse(template.render(context,request))
+
+
+
+for index.html
+
+
+{% if all_albums %}
+
+    <ul>
+        {% for album in all_albums%}
+        <li><a href="/music/{{album.id}}/">{{album.album_title}}</a></li>
+        {% endfor %}
+    </ul>
+
+{% else %}
+    <h3> You don't have any album </h3>>
+{% endif %}
+
+
+clear code
+
+from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Album
+
+
+# Create your views here.
+
+def index(request):
+    all_albums=Album.objects.all()
+    context={"all_albums":all_albums}
+    return render(request,"music/index.html",context)
+
+
+12.404 error 
+from django.http import HttpResponse
+
+
+def detail(request, album_id):
+    try:
+        album=Album.objects.get(pk=album_id)
+    except Album.DoesNotExist:
+        raise Http404("Album does not exist")
+
+13.Adding new Bool field in Database
+
+is_favorite=models.BooleanField(default=False)
+then make migration
