@@ -1,0 +1,12 @@
+!      {      }      [[     ]]     case   do     done   elif   else
+esac   fi     for    function if      in     select then   time
+until  while  alias  bg     bind    break  builtin caller cd
+command compgen complete continue declare dirs disown echo enable
+eval   exec   exit   export false  fc     fg     getopts hash
+help   history if     jobs   kill   let    local  logout popd
+printf pushd  pwd    read   readonly return set    shift  shopt
+source test   times  trap   true   type   typeset ulimit umask
+unalias unset  wait
+
+
+"sh inventory | grep 'N9K-C92348GC-X' | awk '{print \$NF}'"
